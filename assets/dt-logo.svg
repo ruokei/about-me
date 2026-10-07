@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">DT logo</title>
+  <desc id="desc">White DT letters and a violet dot inside an open violet circular arc.</desc>
+  <path d="M330 87 A190 190 0 1 0 257 446" fill="none" stroke="#B7A0F5" stroke-width="17" stroke-linecap="round"/>
+  <path d="M134 181h76c77 0 122 43 122 106s-45 105-122 105h-76zm71 58v95h7c36 0 55-16 55-47s-19-48-55-48z" fill="#F4F2F8" fill-rule="evenodd"/>
+  <path d="M310 181h150v58h-42v153h-66V239h-42z" fill="#F4F2F8"/>
+  <circle cx="454" cy="367" r="25" fill="#B7A0F5"/>
+</svg>
