@@ -1,6 +1,7 @@
 import { ContactCards } from "@/components/ContactCards";
 import { DottedVeil } from "@/components/DottedVeil";
 import { MotionToggle } from "@/components/MotionToggle";
+import { SiteNavigation } from "@/components/SiteNavigation";
 import { HyperText } from "@/components/ui/hyper-text";
 
 const assets = `${import.meta.env.BASE_URL}assets/`;
@@ -37,6 +38,10 @@ function SectionKicker({ text }: { text: string }) {
   return <div className="section-kicker">{text}</div>;
 }
 
+function HoverTitle({ text }: { text: string }) {
+  return <HyperText className="heading-hyper" text={text} animateOnLoad={false} />;
+}
+
 function App() {
   return (
     <>
@@ -45,7 +50,7 @@ function App() {
       <header className="site-header">
         <div className="wrap header-inner">
           <a className="brand" href="#home" aria-label="Derrick Tan, home"><img src={`${assets}dt-logo.svg`} alt="" width="49" height="49" /></a>
-          <nav className="nav" aria-label="Main navigation"><a href="#about">About</a><a href="#capabilities">Capabilities</a><a href="#focus">Now</a></nav>
+          <SiteNavigation />
           <div className="header-actions"><MotionToggle /><a className="header-link" href="mailto:modquack@gmail.com">Email ↗</a></div>
         </div>
       </header>
@@ -53,7 +58,7 @@ function App() {
         <section className="hero" id="home" aria-labelledby="hero-title">
           <div className="hero-copy">
             <div className="eyebrow">Derrick Tan · Kuala Lumpur</div>
-            <h1 id="hero-title"><HyperText className="heading-hyper" text="Cloud" /> systems.<span>Made <HyperText className="heading-hyper" text="practical." /></span></h1>
+            <h1 id="hero-title"><HoverTitle text="Cloud systems." /><span><HoverTitle text="Made practical." /></span></h1>
             <p className="hero-lede">I build repeatable infrastructure and make the path from a working idea to a reliable deployment clearer.</p>
             <p className="hero-sub">Kubernetes, infrastructure as code, GitOps, and observability across cloud and on-premises environments.</p>
             <ContactCards />
@@ -68,7 +73,7 @@ function App() {
 
         <section className="section wrap" id="about" aria-labelledby="about-title">
           <div className="section-head">
-            <div><SectionKicker text="About" /><h2 className="section-heading" id="about-title">The <HyperText className="heading-hyper" text="work" /> behind<br />the infrastructure.</h2></div>
+            <div><SectionKicker text="About" /><h2 className="section-heading" id="about-title"><HoverTitle text="The work behind" /><br /><HoverTitle text="the infrastructure." /></h2></div>
             <p className="section-intro">I work where cloud provisioning, container platforms, and day-to-day operations meet.</p>
           </div>
           <div className="about-layout">
@@ -91,13 +96,13 @@ function App() {
 
         <section className="section wrap" id="capabilities" aria-labelledby="capabilities-title">
           <div className="section-head">
-            <div><SectionKicker text="Capabilities" /><h2 className="section-heading" id="capabilities-title">From foundation<br />to <HyperText className="heading-hyper" text="feedback." /></h2></div>
+            <div><SectionKicker text="Capabilities" /><h2 className="section-heading" id="capabilities-title"><HoverTitle text="From foundation" /><br /><HoverTitle text="to feedback." /></h2></div>
             <p className="section-intro">The tools matter when they make delivery repeatable, systems observable, and operations easier to support.</p>
           </div>
           <div className="capabilities">
             {capabilities.map((item) => (
               <article className="capability" key={item.title}>
-                <h3>{item.title}</h3>
+                <h3><HoverTitle text={item.title} /></h3>
                 <div className="cap-detail"><p>{item.description}</p><div className="skill-tools">{item.tools}</div></div>
               </article>
             ))}
@@ -106,16 +111,16 @@ function App() {
 
         <section className="section wrap" id="focus" aria-labelledby="focus-title">
           <div className="section-head">
-            <div><SectionKicker text="Current focus" /><h2 className="section-heading" id="focus-title">Making the next<br /><HyperText className="heading-hyper" text="request" /> easier.</h2></div>
+            <div><SectionKicker text="Current focus" /><h2 className="section-heading" id="focus-title"><HoverTitle text="Making the next" /><br /><HoverTitle text="request easier." /></h2></div>
             <p className="section-intro">I am extending the same automation mindset into developer self-service and reusable cloud architecture.</p>
           </div>
           <div className="focus-feature">
-            <div><div className="focus-label">In progress / 01</div><h3>Cloud service<br /><HyperText className="heading-hyper" text="marketplace." /></h3></div>
+            <div><div className="focus-label">In progress / 01</div><h3><HoverTitle text="Cloud service" /><br /><HoverTitle text="marketplace." /></h3></div>
             <p>Developing marketplace items and workflows that give developers a clearer path to commonly requested AWS services.</p>
           </div>
           <div className="focus-more">
-            <article className="focus-item"><div className="focus-label">In progress / 02</div><h3>Reusable workload paths</h3><p>Building standard patterns for APIs, services, databases, secrets, compute, and containers with practical guardrails.</p></article>
-            <article className="focus-item"><div className="focus-label">Architecture direction / 03</div><h3>Cloud foundations at scale</h3><p>Working toward landing-zone patterns, policy as code, multi-account provisioning, and consistent Kubernetes standards.</p></article>
+            <article className="focus-item"><div className="focus-label">In progress / 02</div><h3><HoverTitle text="Reusable workload paths" /></h3><p>Building standard patterns for APIs, services, databases, secrets, compute, and containers with practical guardrails.</p></article>
+            <article className="focus-item"><div className="focus-label">Architecture direction / 03</div><h3><HoverTitle text="Cloud foundations at scale" /></h3><p>Working toward landing-zone patterns, policy as code, multi-account provisioning, and consistent Kubernetes standards.</p></article>
           </div>
         </section>
       </main>

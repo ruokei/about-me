@@ -78,17 +78,29 @@ export function HyperText({
       }}
     >
       <span className="hyper-glyphs" aria-hidden="true">
-        {[...displayText].map((letter, index) => (
-          <motion.span
-            key={index}
-            variants={framerProps}
-            initial={reducedMotion ? false : "initial"}
-            animate="animate"
-            style={{ display: "inline-block", whiteSpace: "pre" }}
-          >
-            {letter}
-          </motion.span>
-        ))}
+        {text.split(" ").map((word, wordIndex) => {
+          const offset = text.split(" ").slice(0, wordIndex).reduce((length, part) => length + part.length + 1, 0);
+          return (
+            <span className="hyper-token" key={wordIndex}>
+              {wordIndex > 0 && " "}
+              <span className="hyper-word">
+                {[...word].map((letter, letterIndex) => (
+                  <span className="hyper-letter" key={letterIndex}>
+                    <span className="hyper-letter-measure">{letter}</span>
+                    <motion.span
+                      className="hyper-letter-visible"
+                      variants={framerProps}
+                      initial={reducedMotion ? false : "initial"}
+                      animate="animate"
+                    >
+                      {displayText[offset + letterIndex]}
+                    </motion.span>
+                  </span>
+                ))}
+              </span>
+            </span>
+          );
+        })}
       </span>
       <span className="sr-only">{text}</span>
     </span>
