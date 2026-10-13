@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { isMotionEnabled, subscribeMotion } from "@/lib/motion-preference";
 
 export function DottedVeil() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,7 +10,6 @@ export function DottedVeil() {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let width = 0;
     let height = 0;
     let frame = 0;
@@ -39,14 +39,13 @@ export function DottedVeil() {
           const ny = y / height;
           const distance = Math.hypot((nx - .73) / .63, (ny - .48) / .64);
           const envelope = Math.max(0, 1 - distance);
-          const wave = Math.sin(x * .011 + seconds * .78 + Math.sin(y * .006 + seconds * .3) * 1.3);
-          const ripple = Math.cos(y * .016 - seconds * .58 + x * .004);
-          const sweep = Math.pow(Math.max(0, Math.sin(x * .006 - y * .004 - seconds * .65)), 8);
-          const light = clamp(.44 + wave * .3 + ripple * .19 + sweep * .36, 0, 1);
-          const leftFade = .32 + .68 * smoothstep(.08, .48, nx);
-          const alpha = clamp((.14 + envelope * (.35 + light * .3) + sweep * .15) * leftFade, 0, .75);
-          const radius = .8 + envelope * (.9 + light * 1.25) + sweep * .35;
-          ctx.fillStyle = light > .68 ? `rgba(185,156,255,${alpha})` : `rgba(105,77,181,${alpha})`;
+          const wave = Math.sin(x * .011 + seconds * .46 + Math.sin(y * .006 + seconds * .19) * 1.3);
+          const ripple = Math.cos(y * .016 - seconds * .31 + x * .004);
+          const light = clamp(.48 + wave * .28 + ripple * .18, 0, 1);
+          const leftFade = .18 + .82 * smoothstep(.12, .53, nx);
+          const alpha = clamp((.09 + envelope * (.31 + light * .25)) * leftFade, 0, .58);
+          const radius = .65 + envelope * (.85 + light * 1.15);
+          ctx.fillStyle = light > .68 ? `rgba(145,107,191,${alpha})` : `rgba(61,44,141,${alpha})`;
           ctx.beginPath();
           ctx.arc(x, y, radius, 0, Math.PI * 2);
           ctx.fill();
@@ -76,13 +75,13 @@ export function DottedVeil() {
     function updateMotion() {
       cancelAnimationFrame(frame);
       draw(0);
-      if (!reducedMotion.matches && !document.hidden) frame = requestAnimationFrame(tick);
+      if (isMotionEnabled() && !document.hidden) frame = requestAnimationFrame(tick);
     }
 
     const observer = typeof ResizeObserver === "function" ? new ResizeObserver(resize) : null;
     if (observer) observer.observe(canvas);
     else window.addEventListener("resize", resize);
-    reducedMotion.addEventListener("change", updateMotion);
+    const unsubscribeMotion = subscribeMotion(updateMotion);
     document.addEventListener("visibilitychange", updateMotion);
     resize();
     updateMotion();
@@ -91,7 +90,7 @@ export function DottedVeil() {
       cancelAnimationFrame(frame);
       observer?.disconnect();
       window.removeEventListener("resize", resize);
-      reducedMotion.removeEventListener("change", updateMotion);
+      unsubscribeMotion();
       document.removeEventListener("visibilitychange", updateMotion);
     };
   }, []);

@@ -1,5 +1,6 @@
 import { ContactCards } from "@/components/ContactCards";
 import { DottedVeil } from "@/components/DottedVeil";
+import { MotionToggle } from "@/components/MotionToggle";
 import { HyperText } from "@/components/ui/hyper-text";
 
 const assets = `${import.meta.env.BASE_URL}assets/`;
@@ -45,7 +46,7 @@ function App() {
         <div className="wrap header-inner">
           <a className="brand" href="#home" aria-label="Derrick Tan, home"><img src={`${assets}dt-logo.svg`} alt="" width="49" height="49" /></a>
           <nav className="nav" aria-label="Main navigation"><a href="#about">About</a><a href="#capabilities">Capabilities</a><a href="#focus">Now</a></nav>
-          <a className="header-link" href="mailto:modquack@gmail.com">Email ↗</a>
+          <div className="header-actions"><MotionToggle /><a className="header-link" href="mailto:modquack@gmail.com">Email ↗</a></div>
         </div>
       </header>
       <main id="main">

@@ -1,6 +1,7 @@
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useMotionEnabled } from "@/lib/motion-preference";
 
 interface HyperTextProps {
   text: string;
@@ -27,7 +28,7 @@ export function HyperText({
   const [displayText, setDisplayText] = useState(text);
   const root = useRef<HTMLSpanElement>(null);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = !useMotionEnabled();
 
   const stop = useCallback(() => {
     if (timer.current) clearInterval(timer.current);
