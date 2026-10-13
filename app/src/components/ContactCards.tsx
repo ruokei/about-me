@@ -1,97 +1,91 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { ArrowUpRight, Check, Code2, Copy, Mail, UserRound } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Code2, Mail, UserRound } from "lucide-react";
 
 const email = "modquack@gmail.com";
-
-const cards = [
-  { label: "GitHub", title: "github.com/ruokei", note: "Infrastructure, automation, and experiments ↗" },
-  { label: "LinkedIn", title: "Derrick Tan", note: "Cloud systems · platform engineering ↗" },
-  { label: "Email", title: email, note: "Click to copy the address" },
+const links = [
+  { label: "GitHub", href: "https://github.com/ruokei", icon: Code2 },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/derrick8tan/", icon: UserRound },
 ];
+type Day = { date: string; count: number; level?: number };
+
+async function copyText(value: string) {
+  try { await navigator.clipboard.writeText(value); return true; } catch { /* Try the browser's older copy method. */ }
+  try {
+    const field = document.createElement("textarea");
+    field.value = value;
+    field.style.cssText = "position:fixed;opacity:0";
+    document.body.append(field);
+    field.select();
+    const result = document.execCommand("copy");
+    field.remove();
+    return result;
+  } catch { return false; }
+}
+
+function ContributionGraph({ days }: { days: Day[] }) {
+  const cells = useMemo(() => {
+    if (!days.length) return [];
+    const blanks = Array.from({ length: new Date(`${days[0].date}T00:00:00Z`).getUTCDay() }, () => null);
+    return [...blanks, ...days];
+  }, [days]);
+
+  return <div className="contact-graph" aria-label="GitHub contribution activity in the last year">
+    {cells.map((day, index) => <span key={day?.date ?? `blank-${index}`} className={`contact-graph-day level-${day ? Math.min(4, day.level ?? (day.count === 0 ? 0 : day.count < 3 ? 1 : day.count < 6 ? 2 : day.count < 10 ? 3 : 4)) : 0}`}
+      title={day ? `${day.count} contributions on ${day.date}` : undefined} aria-hidden="true" />)}
+  </div>;
+}
 
 export function ContactCards() {
   const [active, setActive] = useState<number | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [status, setStatus] = useState("");
-  const previous = useRef<number | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [days, setDays] = useState<Day[] | null>(null);
+  const [fetchFailed, setFetchFailed] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "manual">("idle");
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function show(index: number) {
-    if (window.matchMedia("(max-width: 720px)").matches) return;
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    previous.current = active;
-    setActive(index);
-  }
-
-  function hide() {
-    setActive(null);
-    previous.current = null;
-  }
-
-  function showOnHover(index: number) {
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) show(index);
-  }
-
-  useEffect(() => () => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    if (copyTimer.current) clearTimeout(copyTimer.current);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("https://github-contributions-api.jogruber.de/v4/ruokei?y=last", { signal: controller.signal })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Activity unavailable")))
+      .then((data: { contributions?: Day[] }) => { if (Array.isArray(data.contributions)) setDays(data.contributions); else setFetchFailed(true); })
+      .catch((error: unknown) => { if (!(error instanceof DOMException && error.name === "AbortError")) setFetchFailed(true); });
+    return () => { controller.abort(); if (timer.current) clearTimeout(timer.current); };
   }, []);
 
   async function copyEmail() {
-    try {
-      await navigator.clipboard.writeText(email);
-      setCopied(true);
-      setStatus("Email address copied");
-      if (copyTimer.current) clearTimeout(copyTimer.current);
-      copyTimer.current = setTimeout(() => { setCopied(false); setStatus(""); }, 2200);
-    } catch {
-      window.location.href = `mailto:${email}`;
-    }
+    const copied = await copyText(email);
+    setActive(2);
+    setCopyState(copied ? "copied" : "manual");
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setCopyState("idle"), copied ? 3000 : 8000);
   }
 
-  const direction = active !== null && previous.current !== null && active < previous.current ? -8 : 8;
+  const total = days?.reduce((sum, day) => sum + day.count, 0);
 
-  return (
-    <>
-      <div
-        className="text-links"
-        aria-label="Profile and email links"
-        onPointerLeave={() => { closeTimer.current = setTimeout(hide, 80); }}
-        onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) hide(); }}
-        onKeyDown={(event) => { if (event.key === "Escape") hide(); }}
-      >
-        <a href="https://github.com/ruokei" target="_blank" rel="noopener noreferrer" onMouseEnter={() => showOnHover(0)} onFocus={() => show(0)}>GitHub ↗</a>
-        <a href="https://www.linkedin.com/in/derrick8tan/" target="_blank" rel="noopener noreferrer" onMouseEnter={() => showOnHover(1)} onFocus={() => show(1)}>LinkedIn ↗</a>
-        <button type="button" aria-label="Copy email address" onMouseEnter={() => showOnHover(2)} onFocus={() => show(2)} onClick={copyEmail}>{copied ? "Copied ✓" : "Email ↗"}</button>
-        <div className={`contact-preview${active !== null ? " is-visible" : ""}`} style={{ "--card-shift": `${direction}px` } as CSSProperties} aria-hidden="true">
-          {cards.map((card, index) => (
-            <div className={`contact-panel${active === index ? " is-active" : ""}`} key={card.label}>
-              <span className="card-kicker">{card.label}</span>
-              <strong>{card.title}</strong>
-              <span className="card-note">{index === 2 && copied ? "Copied to clipboard" : card.note}</span>
-            </div>
-          ))}
-        </div>
+  return <div className={`contact-cards${active !== null ? " has-preview" : ""}`} aria-label="Profile and email links" onKeyDown={(event) => { if (event.key === "Escape") setActive(null); }}
+    onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setActive(null); }}>
+    <div className="contact-socials" onMouseLeave={() => setActive(null)}>
+      {links.map((link, index) => { const Icon = link.icon; return <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
+        aria-label={link.label} aria-describedby={active === index ? "contact-card-description" : undefined}
+        onMouseEnter={() => setActive(index)} onFocus={() => setActive(index)} onClick={(event) => {
+          if (window.matchMedia("(hover: none), (pointer: coarse)").matches && active !== index) { event.preventDefault(); setActive(index); }
+        }}><Icon size={23} strokeWidth={1.8} aria-hidden="true" /><span>{link.label}</span></a>; })}
+      <button type="button" className="contact-email" aria-label="Copy my email" aria-describedby={active === 2 ? "contact-card-description" : undefined}
+        onMouseEnter={() => setActive(2)} onFocus={() => setActive(2)} onClick={copyEmail}>
+        <Mail size={23} strokeWidth={1.8} aria-hidden="true" /><span>{copyState === "copied" ? "Copied" : "Email"}</span>
+      </button>
+      <div className={`contact-rich-card${active !== null ? " is-visible" : ""} card-${active ?? 0}`} id="contact-card-description" aria-hidden={active === null}>
+        {active === 0 ? <div className="contact-rich-inner">
+          <div className="contact-rich-head"><span className="contact-avatar">DT</span><span><strong>ruokei</strong><small>{days ? `${total?.toLocaleString()} contributions in the last year` : fetchFailed ? "GitHub activity unavailable" : "Loading GitHub activity…"}</small></span></div>
+          {days && <ContributionGraph days={days} />}
+          <span className="contact-rich-footer">View GitHub profile ↗</span>
+        </div> : active === 1 ? <div className="contact-rich-inner contact-linkedin-card">
+          <div className="contact-rich-head"><img className="contact-profile-image" src={`${import.meta.env.BASE_URL}assets/derrick-profile.png`} alt="" width="52" height="52" /><span><span className="contact-rich-kicker">LinkedIn / profile</span><strong>Derrick Tan</strong><small>Platform · DevOps · Systems</small></span></div>
+          <p>Building cloud platforms, repeatable delivery paths, and observable infrastructure.</p><span className="contact-rich-footer">View LinkedIn profile ↗</span>
+        </div> : <div className="contact-rich-inner contact-email-card">
+          <span className="contact-rich-kicker">Email / direct</span><strong>{copyState === "copied" ? "Address copied" : "Let’s connect"}</strong><p>{email}</p><span className="contact-rich-footer">{copyState === "copied" ? "Ready to paste" : copyState === "manual" ? "Select the address to copy it manually" : "Click the email icon to copy the address"}</span>
+        </div>}
       </div>
-      <div className="mobile-contact-cards" aria-label="Profile and email cards">
-        <a className="mobile-contact-card" href="https://github.com/ruokei" target="_blank" rel="noopener noreferrer">
-          <span className="mobile-contact-icon"><Code2 size={22} strokeWidth={1.8} aria-hidden="true" /></span>
-          <span className="mobile-contact-copy"><strong>GitHub</strong><span>github.com/ruokei</span></span>
-          <ArrowUpRight className="mobile-contact-action" size={19} aria-hidden="true" />
-        </a>
-        <a className="mobile-contact-card" href="https://www.linkedin.com/in/derrick8tan/" target="_blank" rel="noopener noreferrer">
-          <span className="mobile-contact-icon"><UserRound size={22} strokeWidth={1.8} aria-hidden="true" /></span>
-          <span className="mobile-contact-copy"><strong>LinkedIn</strong><span>Derrick Tan · platform engineering</span></span>
-          <ArrowUpRight className="mobile-contact-action" size={19} aria-hidden="true" />
-        </a>
-        <button className="mobile-contact-card" type="button" onClick={copyEmail} aria-label="Copy modquack@gmail.com">
-          <span className="mobile-contact-icon"><Mail size={22} strokeWidth={1.8} aria-hidden="true" /></span>
-          <span className="mobile-contact-copy"><strong>{copied ? "Copied" : "Email"}</strong><span>{email}</span></span>
-          {copied ? <Check className="mobile-contact-action" size={19} aria-hidden="true" /> : <Copy className="mobile-contact-action" size={19} aria-hidden="true" />}
-        </button>
-      </div>
-      <span className="copy-status" role="status" aria-live="polite">{status}</span>
-    </>
-  );
+    </div>
+    <span className="copy-status" role="status" aria-live="polite">{copyState === "copied" ? "Email address copied" : copyState === "manual" ? `Copy ${email} manually` : ""}</span>
+  </div>;
 }

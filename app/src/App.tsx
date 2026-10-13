@@ -1,6 +1,7 @@
 import { ContactCards } from "@/components/ContactCards";
 import { DottedVeil } from "@/components/DottedVeil";
 import { MotionToggle } from "@/components/MotionToggle";
+import { OrbTooltips } from "@/components/OrbTooltips";
 import { SiteNavigation } from "@/components/SiteNavigation";
 import { HyperText } from "@/components/ui/hyper-text";
 
@@ -51,7 +52,7 @@ function App() {
         <div className="wrap header-inner">
           <a className="brand" href="#home" aria-label="Derrick Tan, home"><img src={`${assets}dt-logo.svg`} alt="" width="49" height="49" /></a>
           <SiteNavigation />
-          <div className="header-actions"><MotionToggle /><a className="header-link" href="mailto:modquack@gmail.com">Email ↗</a></div>
+          <div className="header-actions"><MotionToggle /></div>
         </div>
       </header>
       <main id="main">
@@ -63,12 +64,7 @@ function App() {
             <p className="hero-sub">Kubernetes, infrastructure as code, GitOps, and observability across cloud and on-premises environments.</p>
             <ContactCards />
           </div>
-          <div className="orb-stage" role="img" aria-label="Glowing violet orb with Build, Deploy, and Observe markers">
-            <div className="orb-core" aria-hidden="true" />
-            <span className="orb-label build" aria-hidden="true">Build</span>
-            <span className="orb-label deploy" aria-hidden="true">Deploy</span>
-            <span className="orb-label observe" aria-hidden="true">Observe</span>
-          </div>
+          <OrbTooltips />
         </section>
 
         <section className="section wrap" id="about" aria-labelledby="about-title">
