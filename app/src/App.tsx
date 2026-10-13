@@ -33,7 +33,7 @@ const capabilities = [
 ];
 
 function SectionKicker({ text }: { text: string }) {
-  return <div className="section-kicker"><HyperText text={text} /></div>;
+  return <div className="section-kicker">{text}</div>;
 }
 
 function App() {
@@ -52,7 +52,7 @@ function App() {
         <section className="hero" id="home" aria-labelledby="hero-title">
           <div className="hero-copy">
             <div className="eyebrow">Derrick Tan · Kuala Lumpur</div>
-            <h1 id="hero-title">Cloud systems.<span>Made practical.</span></h1>
+            <h1 id="hero-title"><HyperText className="heading-hyper" text="Cloud" /> systems.<span>Made <HyperText className="heading-hyper" text="practical." /></span></h1>
             <p className="hero-lede">I build repeatable infrastructure and make the path from a working idea to a reliable deployment clearer.</p>
             <p className="hero-sub">Kubernetes, infrastructure as code, GitOps, and observability across cloud and on-premises environments.</p>
             <ContactCards />
@@ -67,7 +67,7 @@ function App() {
 
         <section className="section wrap" id="about" aria-labelledby="about-title">
           <div className="section-head">
-            <div><SectionKicker text="About" /><h2 className="section-heading" id="about-title">The work behind<br />the infrastructure.</h2></div>
+            <div><SectionKicker text="About" /><h2 className="section-heading" id="about-title">The <HyperText className="heading-hyper" text="work" /> behind<br />the infrastructure.</h2></div>
             <p className="section-intro">I work where cloud provisioning, container platforms, and day-to-day operations meet.</p>
           </div>
           <div className="about-layout">
@@ -77,7 +77,7 @@ function App() {
               <p>I have built deployment workflows, infrastructure definitions, monitoring stacks, certificate automation, and operational tools that reduce manual work and make production easier to support.</p>
               <div className="about-facts">
                 <div className="fact"><strong>80%</strong><span className="stat-label">Reduction in deployment time through automation</span></div>
-                <div className="fact"><strong className="role-title"><HyperText text="DevOps Engineer" /><HyperText text="System Engineer" /><HyperText text="Platform Engineer" /></strong></div>
+                <div className="fact"><strong className="role-title"><span>DevOps Engineer</span><span>System Engineer</span><span>Platform Engineer</span></strong></div>
               </div>
             </div>
             <div className="about-art">
@@ -90,7 +90,7 @@ function App() {
 
         <section className="section wrap" id="capabilities" aria-labelledby="capabilities-title">
           <div className="section-head">
-            <div><SectionKicker text="Capabilities" /><h2 className="section-heading" id="capabilities-title">From foundation<br />to feedback.</h2></div>
+            <div><SectionKicker text="Capabilities" /><h2 className="section-heading" id="capabilities-title">From foundation<br />to <HyperText className="heading-hyper" text="feedback." /></h2></div>
             <p className="section-intro">The tools matter when they make delivery repeatable, systems observable, and operations easier to support.</p>
           </div>
           <div className="capabilities">
@@ -105,11 +105,11 @@ function App() {
 
         <section className="section wrap" id="focus" aria-labelledby="focus-title">
           <div className="section-head">
-            <div><SectionKicker text="Current focus" /><h2 className="section-heading" id="focus-title">Making the next<br />request easier.</h2></div>
+            <div><SectionKicker text="Current focus" /><h2 className="section-heading" id="focus-title">Making the next<br /><HyperText className="heading-hyper" text="request" /> easier.</h2></div>
             <p className="section-intro">I am extending the same automation mindset into developer self-service and reusable cloud architecture.</p>
           </div>
           <div className="focus-feature">
-            <div><div className="focus-label">In progress / 01</div><h3>Cloud service<br />marketplace.</h3></div>
+            <div><div className="focus-label">In progress / 01</div><h3>Cloud service<br /><HyperText className="heading-hyper" text="marketplace." /></h3></div>
             <p>Developing marketplace items and workflows that give developers a clearer path to commonly requested AWS services.</p>
           </div>
           <div className="focus-more">
