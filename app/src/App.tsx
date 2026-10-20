@@ -3,6 +3,7 @@ import { DottedVeil } from "@/components/DottedVeil";
 import { MotionToggle } from "@/components/MotionToggle";
 import { SiteNavigation } from "@/components/SiteNavigation";
 import { HyperText } from "@/components/ui/hyper-text";
+import { HoverPreview } from "@/components/ui/hover-preview";
 import { useMotionEnabled } from "@/lib/motion-preference";
 import { useEffect, useRef } from "react";
 
@@ -90,8 +91,8 @@ function App() {
           </div>
           <div className="about-layout">
             <div className="about-copy">
-              <p>Reliable systems start with changes that are easy to repeat and easy to understand.</p>
-              <p>My work spans Kubernetes platform services, GitOps delivery, Terraform-based provisioning, and observability across AWS, Azure, Alicloud, and on-premises environments.</p>
+              <p>Reliable systems start with <HoverPreview kind="infrastructure">repeatable infrastructure</HoverPreview> and changes that are easy to understand.</p>
+              <p>My work spans Kubernetes platform services, <HoverPreview kind="delivery">reliable delivery</HoverPreview>, Terraform-based provisioning, and <HoverPreview kind="observability">observable systems</HoverPreview> across AWS, Azure, Alicloud, and on-premises environments.</p>
               <p>I have built deployment workflows, infrastructure definitions, monitoring stacks, certificate automation, and operational tools that reduce manual work and make production easier to support.</p>
               <div className="about-facts">
                 <div className="fact"><strong>80%</strong><span className="stat-label">Reduction in deployment time through automation</span></div>
@@ -133,6 +134,11 @@ function App() {
           <div className="focus-more">
             <article className="focus-item"><div className="focus-label">In progress / 02</div><h3><HoverTitle text="Reusable workload paths" /></h3><p>Building standard patterns for APIs, services, databases, secrets, compute, and containers with practical guardrails.</p></article>
             <article className="focus-item"><div className="focus-label">Architecture direction / 03</div><h3><HoverTitle text="Cloud foundations at scale" /></h3><p>Working toward landing-zone patterns, policy as code, multi-account provisioning, and consistent Kubernetes standards.</p></article>
+          </div>
+          <div className="focus-directions" aria-label="Platform priorities">
+            <article className="focus-item"><div className="focus-label">Platform priority / 04</div><h3><HoverTitle text="Developer self-service" /></h3><p>Making common infrastructure requests easier to discover, configure, and provision through guided workflows.</p></article>
+            <article className="focus-item"><div className="focus-label">Platform priority / 05</div><h3><HoverTitle text="Platform guardrails" /></h3><p>Building reusable patterns with clear defaults for access, networking, and configuration, so teams can move faster with fewer decisions to revisit.</p></article>
+            <article className="focus-item"><div className="focus-label">Platform priority / 06</div><h3><HoverTitle text="Service lifecycle" /></h3><p>Thinking beyond initial provisioning: how services are updated, observed, maintained, and eventually retired.</p></article>
           </div>
         </section>
       </main>

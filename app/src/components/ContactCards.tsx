@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Code2, Mail, UserRound } from "lucide-react";
+import { moveSpotlight } from "@/lib/spotlight";
 
 const email = "modquack@gmail.com";
 const links = [
@@ -65,11 +66,11 @@ export function ContactCards() {
     onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setActive(null); }}>
     <div className="contact-socials" onMouseLeave={() => setActive(null)}>
       {links.map((link, index) => { const Icon = link.icon; return <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
-        aria-label={link.label} aria-describedby={active === index ? "contact-card-description" : undefined}
+        className="spotlight-control" onPointerMove={moveSpotlight} aria-label={link.label} aria-describedby={active === index ? "contact-card-description" : undefined}
         onMouseEnter={() => setActive(index)} onFocus={() => setActive(index)} onClick={(event) => {
           if (window.matchMedia("(hover: none), (pointer: coarse)").matches && active !== index) { event.preventDefault(); setActive(index); }
         }}><Icon size={23} strokeWidth={1.8} aria-hidden="true" /><span>{link.label}</span></a>; })}
-      <button type="button" className="contact-email" aria-label="Copy my email" aria-describedby={active === 2 ? "contact-card-description" : undefined}
+      <button type="button" className="contact-email spotlight-control" onPointerMove={moveSpotlight} aria-label="Copy my email" aria-describedby={active === 2 ? "contact-card-description" : undefined}
         onMouseEnter={() => setActive(2)} onFocus={() => setActive(2)} onClick={copyEmail}>
         <Mail size={23} strokeWidth={1.8} aria-hidden="true" /><span>{copyState === "copied" ? "Copied" : "Email"}</span>
       </button>

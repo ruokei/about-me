@@ -1,5 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { moveSpotlight } from "@/lib/spotlight";
 
 const sections = [
   { id: "about", label: "About", number: "01" },
@@ -56,7 +57,7 @@ export function SiteNavigation() {
     <>
       <nav className="nav liquid-glass" aria-label="Main navigation">
         {sections.map(({ id, label }) => (
-          <a href={`#${id}`} aria-current={active === id ? "location" : undefined} key={id}>
+          <a className="spotlight-control" onPointerMove={moveSpotlight} href={`#${id}`} aria-current={active === id ? "location" : undefined} key={id}>
             {label}
           </a>
         ))}
