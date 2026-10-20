@@ -1,7 +1,5 @@
-import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useMotionEnabled } from "@/lib/motion-preference";
 
 const sections = [
   { id: "about", label: "About", number: "01" },
@@ -13,7 +11,6 @@ export function SiteNavigation() {
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
-  const motionEnabled = useMotionEnabled();
 
   useEffect(() => {
     let frame = 0;
@@ -57,11 +54,10 @@ export function SiteNavigation() {
 
   return (
     <>
-      <nav className="nav" aria-label="Main navigation">
+      <nav className="nav liquid-glass" aria-label="Main navigation">
         {sections.map(({ id, label }) => (
           <a href={`#${id}`} aria-current={active === id ? "location" : undefined} key={id}>
             {label}
-            {active === id && <motion.span className="nav-indicator" layoutId="active-nav" transition={{ duration: motionEnabled ? .25 : 0, ease: "easeOut" }} aria-hidden="true" />}
           </a>
         ))}
       </nav>

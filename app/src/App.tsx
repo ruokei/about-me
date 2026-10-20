@@ -1,11 +1,25 @@
 import { ContactCards } from "@/components/ContactCards";
 import { DottedVeil } from "@/components/DottedVeil";
 import { MotionToggle } from "@/components/MotionToggle";
-import { OrbTooltips } from "@/components/OrbTooltips";
 import { SiteNavigation } from "@/components/SiteNavigation";
 import { HyperText } from "@/components/ui/hyper-text";
+import { useMotionEnabled } from "@/lib/motion-preference";
+import { useEffect, useRef } from "react";
 
 const assets = `${import.meta.env.BASE_URL}assets/`;
+const BG_VIDEO = `${assets}hero-video.mp4`;
+
+function HeroBackgroundVideo() {
+  const video = useRef<HTMLVideoElement>(null);
+  const motionEnabled = useMotionEnabled();
+
+  useEffect(() => {
+    if (motionEnabled) void video.current?.play().catch(() => {});
+    else video.current?.pause();
+  }, [motionEnabled]);
+
+  return <video ref={video} className="hero-video" src={BG_VIDEO} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />;
+}
 
 const capabilities = [
   {
@@ -56,15 +70,17 @@ function App() {
         </div>
       </header>
       <main id="main">
-        <section className="hero" id="home" aria-labelledby="hero-title">
+        <section className="hero liquid-hero" id="home" aria-labelledby="hero-title">
+          <HeroBackgroundVideo />
+          <div className="hero-video-tint" aria-hidden="true" />
+          <div className="hero-video-shade" aria-hidden="true" />
           <div className="hero-copy">
             <div className="eyebrow">Derrick Tan · Kuala Lumpur</div>
-            <h1 id="hero-title"><HoverTitle text="Cloud systems." /><span><HoverTitle text="Made practical." /></span></h1>
+            <h1 id="hero-title">Cloud systems.<span>Made practical.</span></h1>
             <p className="hero-lede">I build repeatable infrastructure and make the path from a working idea to a reliable deployment clearer.</p>
             <p className="hero-sub">Kubernetes, infrastructure as code, GitOps, and observability across cloud and on-premises environments.</p>
             <ContactCards />
           </div>
-          <OrbTooltips />
         </section>
 
         <section className="section wrap" id="about" aria-labelledby="about-title">
