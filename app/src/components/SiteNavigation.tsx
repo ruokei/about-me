@@ -1,6 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { moveSpotlight } from "@/lib/spotlight";
+import { MotionToggle } from "@/components/MotionToggle";
 
 const sections = [
   { id: "about", label: "About", number: "01" },
@@ -78,6 +79,7 @@ export function SiteNavigation() {
             <a href="https://github.com/ruokei" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
             <a href="https://www.linkedin.com/in/derrick8tan/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
             <a href="mailto:modquack@gmail.com">Email ↗</a>
+            <MotionToggle />
           </div>
         </div>
       </dialog>
